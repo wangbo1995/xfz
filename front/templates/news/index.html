@@ -1,0 +1,103 @@
+{% extends 'base/front_base.html' %}
+{% load news_filters %}
+
+{% block title %}
+    小饭桌
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/news/index.min.css' %}">
+    <script src="{% static 'arttemplate/template-web.js' %}"></script>
+    <script src="{% static 'js/index.min.js' %}"></script>
+    <script id="news-item" type="text/html">
+        {% verbatim %}
+            {{ each newses news index }}
+                <li>
+                    <div class="thumbnail-group">
+                        <!--注意：这里不能使用news.pk，因为这里用的news是用rtf序列化指定参数返回的，NewsSerializer中我们指定的是id，没有pk！-->
+                        <!--还有就是这里不能被DTL渲染，因为使用了verbatim标签，我们是用arttemplate渲染，所有不能使用url标签！-->
+                        <a href="/news/{{ news.id }}">
+                            <img src="{{ news.thumbnail }}" alt="">
+                        </a>
+                    </div>
+                    <div class="news-group">
+                        <p class="title">
+                            <a href="/news/{{ news.id }}">{{ news.title }}</a>
+                        </p>
+                        <p class="desc">
+                            {{ news.desc }}
+                        </p>
+                        <p class="more">
+                           <span class="category">{{ news.category.name }}</span>
+                            <span class="pub-time">{{ news.pub_time|timeSince }}</span>
+                            <span class="author">{{ news.author.username }}</span>
+                        </p>
+                    </div>
+                </li>
+            {{ /each }}
+        {% endverbatim %}
+    </script>
+{% endblock %}
+
+{% block main %}
+    <div class="main">
+        <div class="wrapper">
+            <div class="main-content-wrapper">
+                <div class="banner-group" id="banner-group">
+                    <ul class="banner-ul" id="banner-ul">
+                        {% for banner in banners %}
+                        <li>
+                            <a target="_blank" href="{{ banner.link_to }}">
+                                <img src="{{ banner.image_url }}" alt="">
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <span class="arrow left-arrow">‹</span>
+                    <span class="arrow right-arrow">›</span>
+                    <div class="page-control-group">
+                        <ul class="page-control">
+
+                        </ul>
+                    </div>
+                </div>
+                <div class="list-out-group">
+                    <ul class="list-tab">
+                        <li data-category="0" class="active"><a href="javascript:void (0);">最新资讯</a></li>
+                        {% for category in categories %}
+                            <li data-category="{{ category.pk }}"><a href="javascript:void (0);">{{ category.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                    <ul class="list-inner-group">
+                        {% for news in newses %}
+                            <li>
+                                <div class="thumbnail-group">
+                                    <a href="{% url 'news:news_detail' news_id=news.pk %}">
+                                        <img src="{{ news.thumbnail }}" alt="">
+                                    </a>
+                                </div>
+                                <div class="news-group">
+                                    <p class="title">
+                                        <a href="{% url 'news:news_detail' news_id=news.pk %}">{{ news.title }}</a>
+                                    </p>
+                                    <p class="desc">
+                                        {{ news.desc }}
+                                    </p>
+                                    <p class="more">
+                                        <span class="category">{{ news.category.name }}</span>
+                                        <span class="pub-time">{{ news.pub_time|time_since }}</span>
+                                        <span class="author">{{ news.author.username }}</span>
+                                    </p>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <div class="load-more-group">
+                        <button class="load-more" id="load-more-btn">查看更多</button>
+                    </div>
+                </div>
+            </div>
+            {% include 'common/sidebar.html' %}
+        </div>
+    </div>
+{% endblock %}

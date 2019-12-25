@@ -1,0 +1,121 @@
+{% extends 'base/front_base.html' %}
+
+{% block title %}
+    课程详情
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static '/css/course/course_detail.min.css' %}">
+    <script src="{% static 'videojs/video.min.js' %}"></script>
+    <script src="{% static 'videojs/videojs-contrib-hls.min.js' %}"></script>
+    <script src="{% static 'videojs/videojs-contrib-quality-levels.min.js' %}"></script>
+    <script type="text/javascript" src="https://cdn.bdstatic.com/jwplayer/latest/cyberplayer.js"></script>
+    <script src="{% static 'js/course_detail.min.js' %}"></script>
+{% endblock %}
+
+{% block main %}
+    <div class="main">
+        <div class="course-nav">
+            <div class="nav-container">
+                <h3 class="title">在线课堂</h3>
+                <ul class="nav-list">
+                    <li class="active"><a href="#">编程语言</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="wrapper">
+            <div class="course-wrapper">
+                <div class="course-info">
+                    <p class="course-title">{{ course.title }}</p>
+                    <div class="price-group">
+                        <div class="share-group">
+                            <span class="title">分享至：</span>
+                            <a class="weixin share-item"></a>
+                            <a href="#" class="weibo share-item"></a>
+                        </div>
+                        <div class="buy-group">
+                            <!--<span class="price pay">￥49.0</span>
+                            <a href="#" class="buy-btn">立即购买</a>!-->
+                            {% if course.price > 0 %}
+                                {% if not buyed %}
+                                    <span class="price pay">￥{{ course.price }}</span>
+                                    <a href="{% url 'course:course_order' course_id=course.pk %}" class="buy-btn">立即购买</a>
+                                {% endif %}
+                            {% else %}
+                                <span class="price free">免费</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="video-group">
+                    <span id="video-info" hidden data-video-url="{{ course.video_url }}" data-cover-url="{{ course.cover_url }}" data-course-id="{{ course.pk }}"></span>
+                    <div id="playercontainer"></div>
+                </div>
+            </div>
+            <div class="bottom-wrapper">
+                <div class="course-detail-wrapper">
+                    <div class="item-group">
+                        <p class="item-title">课程讲师</p>
+                        <div class="teacher-group">
+                            <div class="avater-group">
+                                <img src="{{ course.teacher.avatar }}" alt="" class="avatar">
+                            </div>
+                            <div class="teacher-info">
+                                <p class="teacher-name">{{ course.teacher.username }}</p>
+                                <p class="teacher-desc">{{ course.teacher.jobtitle }}</p>
+                            </div>
+                        </div>
+                        <p class="item-content">
+                            {{ course.teacher.profile }}
+                        </p>
+                    </div>
+                    <div class="item-group">
+                        <p class="item-title">课程简介</p>
+                        <p class="item-content">
+                            暂无
+                        </p>
+                    </div>
+                    <div class="item-group">
+                        <p class="item-title">课程大纲</p>
+                        <p class="item-content">
+                            暂无
+                        </p>
+                    </div>
+                    <div class="item-group">
+                        <p class="item-title">适宜人群</p>
+                        <p class="item-content">
+                            暂无
+                        </p>
+                    </div>
+                    <div class="item-group">
+                        <p class="item-title">帮助中心</p>
+                        <p class="item-content">
+                            1. 购买后的课程在线可反复观看学习，视频有效期以具体课程信息为准。 <br>
+                            2. 课程暂不支持下载观看，均为在线观看视频。 <br>
+                            3. 课程一经购买，不可转让、不可退款；仅限购买账号观看。 <br>
+                            4. 如有问题请咨询站长： 电话：18656046232   微信：wb1172210713 <br>
+                        </p>
+                    </div>
+                </div>
+                <div class="recommend-wrapper">
+                    <p class="recommend-title">推荐课程</p>
+                    <ul class="course-list">
+                        {% for course in courses %}
+                            <li>
+                                <a href="{% url 'course:course_detail' course_id=course.pk %}">
+                                    <div class="course-info-group">
+                                        <p class="course-title">{{ course.title }}</p>
+                                        <p class="teacher">{{ course.teacher.username }}</p>
+                                    </div>
+                                    <div class="thumbnail-group">
+                                        <img src="{{ course.cover_url }}" alt="" class="thumbnail">
+                                    </div>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

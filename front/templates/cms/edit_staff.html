@@ -1,0 +1,54 @@
+{% extends 'cms/base.html' %}
+
+{% block title %}
+    修改员工信息
+{% endblock %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block content-header %}
+    <h1>修改员工信息</h1>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="box">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label for="telephone-input">手机号码：</label>
+                            <input type="text" class="form-control" name="telephone" value="{{ telephone }}" readonly>
+                        </div>
+                        <div class="checkbox">
+                            {% for group in groups %}
+                                <label style="margin-right:20px;">
+                                    {% if group in user_groups %}
+                                        <input type="checkbox" name="groups" checked="checked" value="{{ group.pk }}">{{ group.name }}
+                                    {% else %}
+                                        <input type="checkbox" name="groups" value="{{ group.pk }}">{{ group.name }}
+                                    {% endif %}
+                                </label>
+                            {% endfor %}
+                        </div>
+                        <div class="form-group">
+                            {% for message in messages %}
+                                {# message.tags获取messages上下文处理器消息级别 #}
+                                {% if message.tags == 'info' %}
+                                    <p style="color: red;">{{ message }}</p>
+{#                                    <li style="color: red;">{{ message }}</li>#}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <button class="btn btn-primary pull-right">立即修改</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends 'cms/base.html' %}
+
+{% block title %}
+    个人中心
+{% endblock %}
+
+{% block head %}
+    <style>
+        .tips{
+            float: left;
+        }
+        .user-item{
+            width: 800px;
+        }
+        .thumbnail-group{
+            float: left;
+            width: 200px;
+            height: 200px;
+        }
+        .thumbnail-group .thumbnail{
+            width: 100%;
+            height: 100%;
+        }
+        .more-group{
+            float: left;
+            margin-left: 20px;
+            width: 500px;
+        }
+        .comment-textarea{
+            margin-top: 10px;
+            width: 100%;
+            height: 100px;
+            resize: none;
+            outline: none;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            padding: 6px 10px;
+            box-sizing: border-box;
+        }
+    </style>
+    <script src="https://unpkg.com/qiniu-js@2.4.0/dist/qiniu.min.js"></script>
+    <script src="{% static 'js/user_info.min.js' %}"></script>
+{% endblock %}
+
+{% block content-header %}
+    <h1>个人中心</h1>
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="tips">
+                <li>支持JPG，GIF，PNG格式</li>
+                <li>比例1：1，要求照片清晰，5M以内</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="box user-item">
+        <div class="box-header">
+            <span style="font-weight: bold; font-size: 18px">请设置您的头像及个性签名：</span>
+        </div>
+        <div class="box-body">
+            <div class="thumbnail-group">
+                <input type="file" style="display: none" class="image-input">
+                {% if user.user_avater %}
+                    <img src="{{ user.user_avater }}" alt="" class="thumbnail">
+                {% else %}
+                    <img src="{% static 'images/default.JPG' %}" alt="" class="thumbnail">
+                {% endif %}
+            </div>
+            <div class="more-group">
+                <div class="form-group">
+                    <input type="text" class="form-control" name="base_info" value="用户名：{{ user.username }}         手机号：{{ user.telephone }}" style="height: 40px; font-size: 20px" readonly>
+                </div>
+                <div class="form-group">
+                    {% if user.user_desc %}
+                        <textarea name="desc" class="comment-textarea logined-textarea" placeholder="{{ user.user_desc }}" maxlength="32" style="font-size: 26px"></textarea>
+                    {% else %}
+                        <textarea name="desc" class="comment-textarea logined-textarea" placeholder="请输入您的个性签名，32个字以内~" maxlength="32" style="font-size: 26px"></textarea>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="box-footer">
+            <button class="btn btn-primary pull-right save-btn">保存</button>
+        </div>
+    </div>
+{% endblock %}

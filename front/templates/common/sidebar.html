@@ -1,0 +1,90 @@
+{% load news_filters %}
+
+<div class="sidebar-wrapper">
+    <div class="title-group">
+        <span class="title">在线课堂</span>
+        <a class="more" href="#">更多</a>
+    </div>
+    <div class="advertise-group">
+        <a href="#"><img src="http://www.xfz.cn/static/build/images/side-gift-banner.png" alt=""></a>
+    </div>
+    <div class="platform-group">
+        <div class="title-group">
+            <span class="title">关注我~</span>
+        </div>
+        <div class="focus-group">
+            <ul class="left-group">
+                <li class="zhihu">
+                    <a href="https://www.zhihu.com/people/wang-bo-35-26/asks" target="_blank">关注站长知乎</a>
+                </li>
+                <li class="weibo">
+                    <a href="https://weibo.com/u/2984633925/home?wvr=5&uut=fin&from=reg" target="_blank">关注站长微博</a>
+                </li>
+                <li class="toutiao">
+                    <a href="#">关注站长头条</a>
+                </li>
+            </ul>
+            <div class="right-group">
+                <p class="desc">扫码加站长微信wb1172210713</p>
+            </div>
+        </div>
+    </div>
+    {% if newses %}
+        {% with newses|random as news %}
+            <div class="hot-news-group">
+                <div class="title-group">
+                    <span class="title">推荐新闻</span>
+                </div>
+                <ul class="hot-list-group">
+                    <li>
+                        <div class="left-group">
+                            <p class="title">
+                                <a href="{% url 'news:news_detail' news_id=news.pk %}">{{ news.title|truncatechars:24 }}</a>
+                            </p>
+                            <p class="more">
+                                <span class="category">{{ news.category.name }}</span>
+                                <span class="pub-time">{{ news.pub_time|time_since }}</span>
+                            </p>
+                        </div>
+                        <div class="right-group">
+                            <a href="{% url 'news:news_detail' news_id=news.pk %}">
+                                <img src="{{ news.thumbnail }}" alt="">
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        {% endwith %}
+    {% endif %}
+    {% if news %}
+        {% with news|author_other_newses as all_newses %}
+            {% if all_newses|length > 1 %}
+                <div class="hot-news-group">
+                    <div class="title-group">
+                        <span class="title">【{{ news.author.username }}】的其它文章</span>
+                    </div>
+                    <ul class="hot-list-group">
+                        {% for news in all_newses %}
+                            <li>
+                                <div class="left-group">
+                                    <p class="title">
+                                        <a href="{% url 'news:news_detail' news_id=news.pk %}">{{ news.title|truncatechars:24 }}</a>
+                                    </p>
+                                    <p class="more">
+                                        <span class="category">{{ news.category.name }}</span>
+                                        <span class="pub-time">{{ news.pub_time|time_since }}</span>
+                                    </p>
+                                </div>
+                                <div class="right-group">
+                                    <a href="{% url 'news:news_detail' news_id=news.pk %}">
+                                        <img src="{{ news.thumbnail }}" alt="">
+                                    </a>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        {% endwith %}
+    {% endif %} 
+</div>

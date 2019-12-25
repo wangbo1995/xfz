@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <!-- href前缀不加http或者https等表示使用该网站默认的协议 -->
+    <link rel="stylesheet" href="//at.alicdn.com/t/font_1538976_dl1uj5s1cdp.css">
+    <link rel="stylesheet" href="{% static '/css/common/auth.min.css' %}">
+    <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'js/message.min.js' %}"></script>
+    <script src="{% static 'js/xfzajax.min.js' %}"></script>
+    {% block head %}{% endblock %}
+{#    <script src="{% static 'js/auth.min.js' %}"></script>#}
+    <script src="{% static 'js/front_base.min.js' %}"></script>
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo-box">
+                <a href="/"></a>
+            </div>
+            <ul class="nav">
+                <li><a href="{% url 'index' %}">前沿资讯</a></li>
+                <li><a href="{% url 'course:index' %}">热门视频</a></li>
+                <li><a href="{% url 'payinfo:index' %}">学习天地</a></li>
+{#                <li><a href="{% url 'search' %}">搜索</a></li>#}
+{#                因为使用haystack，urls.py中没有别名，所以搜索这里需要写死#}
+                <li><a href="/search/">资讯搜索</a></li>
+            </ul>
+            <div class="auth-box">
+                <i class="icon-people1 iconfont"></i>
+                {% if user.is_authenticated %}
+                    <a href="#" class="authenticated-box">{{ user.username }}</a>
+                    <div class="user-more-box">
+                        <i class="triangle"></i>
+                        {% if user.is_staff %}
+                            <a href="{% url 'cms:index' %}">管理系统</a>
+                        {% endif %}
+                        <a href="{% url 'xfzauth:logout' %}">退出登录</a>
+                    </div>
+                {% else %}
+                    <a href="#" class="signin-btn">登录</a> /
+                    <a href="#" class="signup-btn">注册</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+    {% block main %}{% endblock %}
+    <footer class="footer">
+        <div class="top-group">
+            <div class="top-inner-group">
+                <div class="logo-box"></div>
+                <div class="detail-group">
+                    <div class="line1">
+                        <ul class="links">
+                            <li><a href="">前沿资讯</a></li>
+                            <li><a href="{% url 'course:index' %}">热门视频</a></li>
+                            <li><a href="{% url 'payinfo:index' %}">学习天地</a></li>
+                            <li><a href="/search/">资讯搜索</a></li>
+                        </ul>
+                        <div class="about-us">
+                            <span class="title">关于我们：</span>
+                            <ul class="social-group">
+                                <li class="weixin">
+                                    <div class="wx-qrcode"></div>
+                                    <span class="text">
+                                        wb1172210713
+                                    </span>
+                                </li>
+                                <li class="weibo"><a class="text" target="_blank" href="https://weibo.com/u/2984633925/home?wvr=5&uut=fin&from=reg">
+                                    站长微博
+                                </a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="line2">
+                        <p class="address">地址：合肥市高新区浮山路与燕子河路交叉口向西100米新华御湖上园</p>
+                        <p class="contact">联系方式：18656046232（工作日9点-18点）</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bottom-group">
+            ©2019 个人Pythonista 合肥
+        </div>
+    </footer>
+<div class="mask-wrapper">
+        <div class="auth-wrapper">
+            <div class="close-wrapper">
+                <span class="close-btn icon-close iconfont"></span>
+            </div>
+            <div class="auth-inner-wrapper">
+                <div class="scroll-wrapper">
+                    <div class="signin-group auth-group">
+                        <div class="top-group">
+                            <span class="title">请登录</span>
+                            <a href="javascript: void(0);" class="switch">立即注册></a>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="telephone" placeholder="请输入手机号码">
+                            </div>
+                            <div class="input-group">
+                                <input type="password" class="form-control" name="password" placeholder="请输入密码">
+                            </div>
+                            <div class="input-group">
+                                <label class="remember-label">
+                                    <input type="checkbox" name="remember" value="1">记住我
+                                </label>
+                            </div>
+                            <div class="input-group">
+                                <input type="submit" class="submit-btn" value="立即登录">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="signup-group auth-group">
+                        <div class="top-group">
+                            <span class="title">请注册</span>
+                            <a href="javascript: void(0);" class="switch">立即登录<</a>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="telephone" placeholder="手机号码">
+                            </div>
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="username" placeholder="用户名">
+                            </div>
+                            <div class="input-group">
+                                <div class="short-input-group">
+                                    <input type="text" class="form-control" name="img_captcha" placeholder="图形验证码">
+                                </div>
+                                <div class="input-group-addon">
+                                    <img src="{% url 'xfzauth:img_chptcha' %}" alt="" class="img_chptcha" style="cursor: pointer">
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <input type="password" class="form-control" name="password1" placeholder="密码">
+                            </div>
+                            <div class="input-group">
+                                <input type="password" class="form-control" name="password2" placeholder="确认密码">
+                            </div>
+                            <div class="input-group">
+                                <div class="short-input-group">
+                                    <input type="text" class="form-control" name="sms_captcha" placeholder="短信验证码">
+                                </div>
+                                <div class="input-group-addon">
+                                    <span class="sms-captcha-btn">发送验证码</span>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <input type="submit" class="submit-btn" value="立即注册">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,55 @@
+{% extends 'base/front_base.html' %}
+{% load news_filters %}
+
+{% block title %}
+    搜索
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static '/css/search/search.min.css' %}">
+{% endblock %}
+
+{% block main %}
+    <div class="main">
+        <div class="wrapper">
+            <div class="main-content-wrapper">
+                <div class="search-group">
+                    <form action="" method="get">
+                        <input type="text" name="q" class="search-input" placeholder="请输入关键字">
+                        <input type="submit" class="search-btn" value="搜索">
+                    </form>
+                </div>
+                <div class="recommend-group">
+                    {% if is_show_hot %}
+                        <p class="recommend-title">热门推荐</p>
+                    {% endif %}
+                    <ul class="recommend-list">
+                        {% for news in newses %}
+                            <li>
+                                <div class="thumbnail-group">
+                                    <a href="{% url 'news:news_detail' news_id=news.pk %}">
+                                        <img src="{{ news.thumbnail }}" alt="">
+                                    </a>
+                                </div>
+                                <div class="news-group">
+                                    <p class="title">
+                                        <a href="{% url 'news:news_detail' news_id=news.pk %}">{{ news.title }}</a>
+                                    </p>
+                                    <p class="desc">
+                                        {{ news.desc }}
+                                    </p>
+                                    <p class="more">
+                                       <span class="category">{{ news.category.name }}</span>
+                                        <span class="pub-time">{{ news.pub_time|time_since }}</span>
+                                        <span class="author">{{ news.author.username }}</span>
+                                    </p>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% include 'common/sidebar.html' %}
+        </div>
+    </div>
+{% endblock %}
